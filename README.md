@@ -8,7 +8,7 @@ This project aims to analyze and visualize global public Research, Development, 
 - Budget Trend Visualization over time
 - Sectoral Budget Comparison
 - Country-wise Budget Analysis
-- Interactive Dashboard
+- [Interactive Dashboard](https://global-energy-rdd-budgets.streamlit.app/)
 
 ## Technologies:
 
