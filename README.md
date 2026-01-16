@@ -1,4 +1,4 @@
-# Capstone #01 2: Global Energy Technology RD&D Budget Analysis
+# Global Energy Technology RD&D Budget Analysis
 
 This project aims to analyze and visualize global public Research, Development, and Demonstration (RD&D) budgets for energy technologies from 2020 to 2025. It will focus on identifying trends, comparing allocations across sectors and countries, and providing an interactive dashboard for data exploration.
 
@@ -11,8 +11,6 @@ This project aims to analyze and visualize global public Research, Development, 
 - Interactive Dashboard
 
 ## Technologies:
-
-# Capstone #01 2 — Global Energy RD&D Budgets
 
 Concise interactive dashboard for exploring public RD&D budgets by country, technology, and year (2020–2025). Data used in this project is derived from the International Energy Agency (IEA) Energy Technology RD&D & Budget Database.
 
