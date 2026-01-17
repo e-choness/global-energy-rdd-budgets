@@ -1,51 +1,8 @@
+
+import plotly.express as px
 import streamlit as st
 import pandas as pd
-import plotly.express as px
-
-DATA_PATH = "data/Energy-Technology-RD&D-Budgets-Filtered.csv"
-
-
-@st.cache_data
-def load_data(path=DATA_PATH):
-    df = pd.read_csv(path)
-    # normalize column names
-    df.columns = [c.strip() for c in df.columns]
-    # prefer uppercase TIME_PERIOD and OBS_VALUE which hold values
-    if 'TIME_PERIOD' in df.columns:
-        df['Year'] = pd.to_numeric(
-            df['TIME_PERIOD'], errors='coerce').astype(pd.Int64Dtype())
-    elif 'Time Period' in df.columns:
-        df['Year'] = pd.to_numeric(
-            df['Time Period'], errors='coerce').astype(pd.Int64Dtype())
-    else:
-        df['Year'] = pd.NA
-
-    if 'OBS_VALUE' in df.columns:
-        df['Value'] = pd.to_numeric(df['OBS_VALUE'], errors='coerce')
-    elif 'Observation value' in df.columns:
-        df['Value'] = pd.to_numeric(df['Observation value'], errors='coerce')
-    else:
-        df['Value'] = pd.NA
-
-    # friendly names
-    if 'Country/Region' in df.columns:
-        df['Country'] = df['Country/Region']
-    elif 'COUNTRY' in df.columns:
-        df['Country'] = df['COUNTRY']
-
-    if 'Technology' in df.columns:
-        df['Technology'] = df['Technology']
-    elif 'RDD_TECH' in df.columns:
-        df['Technology'] = df['RDD_TECH']
-
-    if 'Sector' in df.columns:
-        df['Sector'] = df['Sector']
-
-    # drop rows missing values
-    df = df.dropna(subset=['Year', 'Value', 'Country'])
-
-    return df
-
+from data_processing import load_data
 
 def main():
     st.set_page_config(
@@ -63,7 +20,7 @@ def main():
 
     all_countries = sorted(df['Country'].unique())
     sel_countries = st.sidebar.multiselect(
-        "Countries (top 10 suggested)", all_countries, default=all_countries[:10])
+        "Countries (10 suggested)", all_countries, default=all_countries[:10])
 
     all_tech = sorted(df['Technology'].unique())
     sel_tech = st.sidebar.multiselect(
@@ -100,40 +57,58 @@ def main():
     else:
         st.info("No data in the selected filters for time series.")
 
-    st.markdown("---")
+    # Line chart: Budget overtime by country
+    st.subheader("Budgets over time by country")
+    countries_by_year = filtered.groupby(['Year','Country'], as_index=False)['Value'].sum()
+    if not countries_by_year.empty:
+        fig_area = px.area(countries_by_year, x='Year', y='Value', color='Country',
+                        title='Budgets over time — stacked by country')
+        st.plotly_chart(fig_area, use_container_width=True)
+    else:
+        st.info("No data in the selected filters for country time series.")
 
     # Layout: charts
     left, right = st.columns([2, 1])
 
+    # Top countries
+    st.subheader("Top countries (selected) by total budget")
+    top_countries = filtered.groupby('Country', as_index=False)[
+        'Value'].sum().sort_values('Value', ascending=False).head(10)
+    
     with left:
-        # Bar chart: by technology for selected year range
-        st.subheader("Breakdown by Technology")
-        tech_year = filtered.groupby('Technology', as_index=False)[
-            'Value'].sum().sort_values('Value', ascending=False)
-        if not tech_year.empty:
-            fig_bar = px.bar(
-                tech_year,
-                x='Value',
-                y='Technology',
-                orientation='h',
-                title=f'Budgets by Technology — {sel_year_range[0]}–{sel_year_range[1]}'
-            )
-            st.plotly_chart(fig_bar, use_container_width=True)
+        # Choropleth map
+        if not top_countries.empty:
+            st.subheader("Geographical Distribution")
+            fig_map = px.choropleth(top_countries, locations='Country', locationmode='country names', color='Value', title='Budgets by country')
+            st.plotly_chart(fig_map, use_container_width=True)
         else:
-            st.info("No technology breakdown available for the selected filters.")
+            st.info("No country data available for the selected filters.")
 
     with right:
         # Top countries pie chart
-        st.subheader("Top countries by total budget")
-        top_countries = filtered.groupby('Country', as_index=False)[
-            'Value'].sum().sort_values('Value', ascending=False).head(20)
         if not top_countries.empty:
             fig_pie = px.pie(top_countries, values='Value', names='Country',
-                            title='Top countries by total budget (top 20)', hover_data=['Value'])
+                            title='Top countries by total budget (top 10)', hover_data=['Value'])
             fig_pie.update_traces(textposition='inside', textinfo='percent+label')
             st.plotly_chart(fig_pie, use_container_width=True)
         else:
             st.info("No country data available for the selected filters.")
+
+    # Bar chart: by technology for selected year range
+    st.subheader("Breakdown by Technology")
+    tech_year = filtered.groupby('Technology', as_index=False)[
+        'Value'].sum().sort_values('Value', ascending=False)
+    if not tech_year.empty:
+        fig_bar = px.bar(
+            tech_year,
+            x='Value',
+            y='Technology',
+            orientation='h',
+            title=f'Budgets by Technology — {sel_year_range[0]}–{sel_year_range[1]}'
+        )
+        st.plotly_chart(fig_bar, use_container_width=True)
+    else:
+        st.info("No technology breakdown available for the selected filters.")
 
     # Data download
     st.subheader("Data")
