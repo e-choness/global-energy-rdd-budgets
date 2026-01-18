@@ -2,6 +2,8 @@
 
 This project aims to analyze and visualize global public Research, Development, and Demonstration (RD&D) budgets for energy technologies from 2020 to 2025. It will focus on identifying trends, comparing allocations across sectors and countries, and providing an interactive dashboard for data exploration.
 
+Project Presentation - [Click Here](https://gamma.app/docs/Global-Energy-RD-Budgets-Trends-Disparities-and-Future-Implicatio-n2f1glcosj5l6l3)
+
 ## Features
 
 - Data Ingestion & Preprocessing
