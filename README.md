@@ -10,6 +10,24 @@ This project aims to analyze and visualize global public Research, Development, 
 - Country-wise Budget Analysis
 - [Interactive Dashboard](https://global-energy-rdd-budgets.streamlit.app/)
 
+## Dashboard Preview
+
+### Budget Trends Over Time
+
+![Trend of total energy RD&D budgets over the years for selected countries and technologies.](img/total-budget-line-chart.jpg)
+
+### Budgets by Country Over Time
+
+![Stacked area chart showing the breakdown of budgets by country over time.](img/total-budget-line-chart-countries.jpg)
+
+### Geographical Budget Distribution
+
+![Choropleth map displaying the geographical distribution of RD&D budgets by country.](img/choropleth-map.jpg)
+
+### Budget Breakdown by Technology
+
+![Bar chart comparing the allocated budgets across different energy technology sectors.](img/budgets-by-technology.jpg)
+
 ## Technologies:
 
 Concise interactive dashboard for exploring public RD&D budgets by country, technology, and year (2020–2025). Data used in this project is derived from the International Energy Agency (IEA) Energy Technology RD&D & Budget Database.

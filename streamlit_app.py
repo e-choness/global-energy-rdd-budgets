@@ -207,6 +207,7 @@ def main():
     This section allows you to download the filtered dataset in CSV format. 
     The data includes all rows that match your selected criteria from the sidebar filters.
     You can use this data for further analysis or reporting.
+    Or go to the data source: [IEA](https://www.iea.org/data-and-statistics/data-product/energy-technology-rd-and-d-budget-database-2)
     """)
 
     st.write("Filtered sample (first 200 rows)")
